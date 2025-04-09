@@ -1,11 +1,19 @@
 import "~/styles/globals.css";
 
-import Navbar from "~/components/Navbar";
-import Footer from "~/components/Footer";
+import { Inter } from "next/font/google";
+import { TRPCReactProvider } from "~/trpc/react";
+import Navbar from "~/app/_components/Navbar";
+import Footer from "~/app/_components/Footer";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata = {
-  title: "Vibe Check",
-  description: "Your ultimate aggregator for discovering the best products across the web",
+  title: "Product Aggregator",
+  description: "A T3 Stack product aggregator application",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function RootLayout({
@@ -15,12 +23,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="container mx-auto px-4 py-8 flex-grow">
-          {children}
-        </main>
-        <Footer />
+      <body className={`font-sans ${inter.variable} antialiased min-h-screen flex flex-col bg-gray-50`}>
+        <TRPCReactProvider>
+          <Navbar />
+          <main className="flex-grow container mx-auto px-4 py-8">
+            <div className="max-w-screen-xl mx-auto">
+              {children}
+            </div>
+          </main>
+          <Footer />
+        </TRPCReactProvider>
       </body>
     </html>
   );
