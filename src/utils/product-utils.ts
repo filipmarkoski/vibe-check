@@ -1,4 +1,50 @@
-import { type Product } from "~/types/product";
+import type { Product } from '~/lib/api';
+
+// Define the SafeProduct type
+export interface SafeProduct {
+  id: number; // Make sure this is number to match API
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail?: string;
+  images: string[];
+  features?: string[];
+  // Add any other properties needed
+}
+
+/**
+ * Creates a safe product object with default values when properties are missing
+ */
+export function createSafeProduct(product: Product): SafeProduct {
+  return {
+    id: product.id,
+    title: product.title ?? '',
+    description: product.description ?? '',
+    price: product.price ?? 0,
+    discountPercentage: product.discountPercentage ?? 0,
+    rating: product.rating ?? 0,
+    stock: product.stock ?? 0,
+    brand: product.brand ?? '',
+    category: product.category ?? 'Uncategorized',
+    thumbnail: product.thumbnail ?? '',
+    images: product.images ?? [],
+    features: Array.isArray(product.features) ? product.features : []
+    // Map other properties as needed
+  };
+}
+
+/**
+ * Extract images from a product
+ */
+export function getSafeProductImages(product: SafeProduct): string[] {
+  // For now, just return an array with the thumbnail if it exists
+  return product.thumbnail ? [product.thumbnail] : [];
+}
 
 /**
  * Calculate the discounted price of a product
@@ -11,7 +57,7 @@ export function calculateDiscountedPrice(price: number, discountPercentage: numb
  * Get a fallback value for potentially undefined data
  */
 export function getFallbackValue<T>(value: T | undefined | null, fallback: T): T {
-  return (value === undefined || value === null) ? fallback : value;
+  return value ?? fallback;
 }
 
 /**
@@ -31,24 +77,6 @@ export function getStockStatus(stock: number | undefined | null): { text: string
 }
 
 /**
- * Get safe product images with fallbacks
- */
-export function getSafeProductImages(product: Product): string[] {
-  if (!product) return ['https://placehold.co/300x200?text=No+Image'];
-  
-  // If images is empty or not an array, use thumbnail as fallback
-  const images = Array.isArray(product.images) && product.images.length > 0
-    ? product.images
-    : [];
-  
-  // Ensure thumbnail is defined
-  const thumbnail = product.thumbnail || 'https://placehold.co/300x200?text=No+Image';
-  
-  // If there are no valid images, return an array with just the thumbnail
-  return images.length > 0 ? images : [thumbnail];
-}
-
-/**
  * Create placeholder product for loading states
  */
 export function createPlaceholderProducts(count: number): Partial<Product>[] {
@@ -65,24 +93,4 @@ export function createPlaceholderProducts(count: number): Partial<Product>[] {
     category: 'loading',
     brand: 'Loading...',
   }));
-}
-
-/**
- * Ensure safe product properties with fallbacks
- */
-export function createSafeProduct(product: Product): Product {
-  return {
-    ...product,
-    title: getFallbackValue(product.title, 'Untitled Product'),
-    description: getFallbackValue(product.description, 'No description available'),
-    category: getFallbackValue(product.category, 'Uncategorized'),
-    price: getFallbackValue(product.price, 0),
-    discountPercentage: getFallbackValue(product.discountPercentage, 0),
-    rating: getFallbackValue(product.rating, 0),
-    stock: getFallbackValue(product.stock, 0),
-    brand: getFallbackValue(product.brand, 'Unknown Brand'),
-    thumbnail: getFallbackValue(product.thumbnail, 'https://placehold.co/300x200?text=No+Image'),
-    images: Array.isArray(product.images) ? 
-      product.images : ['https://placehold.co/300x200?text=No+Image'],
-  };
 }

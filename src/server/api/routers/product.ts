@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
-import { TRPCError } from "@trpc/server";
-import { type ProductsResponse, type Product, type Category } from "~/types/product";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { type ProductsResponse, type Product } from "~/types/product";
+import { TRPCError } from '@trpc/server';
 
 export const productRouter = createTRPCRouter({
   list: publicProcedure

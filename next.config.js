@@ -19,6 +19,16 @@ const nextConfig = {
         pathname: '**',
       },
     ],
+    minimumCacheTTL: 60,
+    domains: ['placehold.co', 'dummyjson.com'],
+  },
+  webpack: (config, { isServer }) => {
+    config.watchOptions = {
+      ...config.watchOptions,
+      ignored: /node_modules|\.git|\.next/,
+    };
+    
+    return config;
   },
 };
 

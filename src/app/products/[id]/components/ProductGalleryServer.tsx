@@ -1,25 +1,23 @@
-"use server";
-
-import type { Product } from "~/types/product";
-import { getSafeProductImages } from "~/utils/product-utils";
-import { ProductGallery } from "./ProductGallery";
+import { type Product } from '~/types/product';
+import { getSafeProductImages } from '~/utils/product-utils';
 
 interface ProductGalleryServerProps {
   product: Product;
 }
 
-export async function ProductGalleryServer({ product }: ProductGalleryServerProps) {
-  // Safety checks and data preparation can happen server-side
-  // This component can pre-compute values and pass only what's needed to the client component
+// Server component to prepare data for client component
+export default function ProductGalleryServer({ product }: ProductGalleryServerProps) {
+  // Process data on the server side - NO hooks or state updates
+  const images = getSafeProductImages(product);
+  const defaultImage = images[0];
   
-  // Prepare data for the client component
-  const safeProduct = {
-    ...product,
-    images: getSafeProductImages(product),
-    title: product.title || "Product",
-    discountPercentage: product.discountPercentage || 0
-  };
-
-  // Pass the prepared data to the client component
-  return <ProductGallery product={safeProduct} />;
+  // Pass processed data as serializable props to client component
+  return (
+    <div 
+      id="product-gallery-data"
+      data-images={JSON.stringify(images)}
+      data-default-image={defaultImage}
+      data-product-title={product.title}
+    />
+  );
 }

@@ -1,26 +1,20 @@
-"use server";
-
-import type { Product } from "~/types/product";
-import { calculateDiscountedPrice, createSafeProduct } from "~/utils/product-utils";
-import { ProductInfo } from "./ProductInfo";
+import { type Product } from '~/types/product';
+import { createSafeProduct } from '~/utils/product-utils';
 
 interface ProductInfoServerProps {
   product: Product;
 }
 
-export async function ProductInfoServer({ product }: ProductInfoServerProps) {
-  // Apply all safety checks and pre-calculations on the server
+// Server component to prepare data for client component
+export default function ProductInfoServer({ product }: ProductInfoServerProps) {
+  // Process data on the server side - NO hooks or state updates
   const safeProduct = createSafeProduct(product);
   
-  // Pre-calculate the discounted price on the server
-  const discountedPrice = calculateDiscountedPrice(
-    safeProduct.price,
-    safeProduct.discountPercentage
+  // Pass processed data as serializable props to client component
+  return (
+    <div 
+      id="product-info-data"
+      data-product={JSON.stringify(safeProduct)}
+    />
   );
-  
-  // Pass both the safe product and pre-calculated values to the client component
-  return <ProductInfo 
-    product={safeProduct} 
-    discountedPrice={discountedPrice}
-  />;
 }
