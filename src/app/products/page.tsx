@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import ProductFilters from "~/app/_components/products/ProductFilters";
-import ProductGrid from "~/app/_components/products/ProductGrid"; // Assuming you have this component
+import ProductGrid from "~/app/_components/products/ProductGrid";
+import type { Product, ProductsResponse } from "~/types/product";
 
 export default function ProductsPage() {
-  // State for categories and selected category
+  // State for categories and selected category with proper typing
   const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch categories on component mount
@@ -16,14 +17,15 @@ export default function ProductsPage() {
     const fetchCategories = async () => {
       try {
         const response = await fetch('https://dummyjson.com/products/category-list');
-        const data = await response.json();
+        const data = await response.json() as string[];
         setCategories(data);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
 
-    fetchCategories();
+    // Handle promise properly with void operator
+    void fetchCategories();
   }, []);
 
   // Fetch products based on selected category
@@ -37,16 +39,18 @@ export default function ProductsPage() {
           : 'https://dummyjson.com/products';
         
         const response = await fetch(url);
-        const data = await response.json();
-        setProducts(data.products || []);
+        const data = await response.json() as ProductsResponse;
+        setProducts(data.products ?? []);
       } catch (error) {
         console.error('Error fetching products:', error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
+    // Handle promise properly with void operator
+    void fetchProducts();
   }, [activeCategory]); // Re-fetch when category changes
 
   // Handler to update the active category

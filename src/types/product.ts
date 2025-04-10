@@ -1,7 +1,7 @@
 export interface CategoryObject {
   slug: string;
   name: string;
-  url: string;
+  url?: string;
 }
 
 export interface Category {
@@ -33,21 +33,25 @@ export interface Product {
   warrantyInformation?: string;
   shippingInformation?: string;
   availabilityStatus?: string;
-  reviews?: {
-    rating: number;
-    comment: string;
-    date: string;
-    reviewerName: string;
-    reviewerEmail: string;
-  }[];
+  reviews?: ProductReview[];
   returnPolicy?: string;
   minimumOrderQuantity?: number;
-  meta?: {
-    createdAt: string;
-    updatedAt: string;
-    barcode: string;
-    qrCode: string;
-  };
+  meta?: ProductMeta;
+}
+
+export interface ProductReview {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+  reviewerEmail: string;
+}
+
+export interface ProductMeta {
+  createdAt: string;
+  updatedAt: string;
+  barcode: string;
+  qrCode: string;
 }
 
 export interface ProductsResponse {

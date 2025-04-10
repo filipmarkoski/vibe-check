@@ -24,7 +24,7 @@ export default function ProductFilters({
   }, [externalActiveCategory]);
 
   // Use either external or internal active category
-  const activeCategory = externalActiveCategory !== undefined ? externalActiveCategory : internalActiveCategory;
+  const activeCategory = externalActiveCategory ?? internalActiveCategory;
 
   // Debug info - log whenever the component renders with its current state
   useEffect(() => {
