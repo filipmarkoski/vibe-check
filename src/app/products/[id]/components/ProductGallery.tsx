@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Product } from "~/types/product";
+import type { Product } from "~/types/product";
 
 interface ProductGalleryProps {
   product: Product;
@@ -10,14 +10,18 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ product }: ProductGalleryProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [productImages, setProductImages] = useState<string[]>([]);
+  const [activeImage, setActiveImage] = useState<string>('/images/blocko-vibing.png');
   
-  // Ensure product.images is always an array, even if the API returns null
-  const productImages = Array.isArray(product.images) && product.images.length > 0
-    ? product.images
-    : [product.thumbnail ?? 'https://placehold.co/300x200?text=No+Image'];
-  
-  // Use a valid image for display
-  const activeImage = productImages[activeImageIndex] ?? 'https://placehold.co/300x200?text=No+Image';
+  // Process product data in useEffect to avoid state updates during render
+  useEffect(() => {
+    // Use the images directly from the product object that were already processed by the server component
+    const images = product.images || [];
+    setProductImages(images);
+    
+    // Use a valid image for display with fallback
+    setActiveImage(images[activeImageIndex] ?? images[0] ?? '/images/blocko-vibing.png');
+  }, [product, activeImageIndex]);
 
   return (
     <div className="p-4 flex flex-col gap-4 border-r-0 md:border-r-2 border-black">

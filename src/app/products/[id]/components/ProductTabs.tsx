@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from "~/types/product";
+import type { Product } from "~/types/product";
 import {
   Accordion,
   AccordionContent,

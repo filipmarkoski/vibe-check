@@ -6,8 +6,8 @@ import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 
 // Import modularized components
-import { ProductGallery } from "./components/ProductGallery";
-import { ProductInfo } from "./components/ProductInfo";
+import { ProductGalleryServer } from "./components/ProductGalleryServer";
+import { ProductInfoServer } from "./components/ProductInfoServer";
 import { ProductTabs } from "./components/ProductTabs";
 import { ProductRelated } from "./components/ProductRelated";
 import { ProductErrorMessage } from "./components/ProductErrorMessage";
@@ -63,11 +63,11 @@ export default function ProductDetailPage() {
       {/* Product Card */}
       <div className="border-2 border-black bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Product Images Section */}
-          <ProductGallery product={product} />
+          {/* Product Images Section - Now using server component wrapper */}
+          <ProductGalleryServer product={product} />
           
-          {/* Product Info Section */}
-          <ProductInfo product={product} />
+          {/* Product Info Section - Now using server component wrapper */}
+          <ProductInfoServer product={product} />
         </div>
       </div>
       

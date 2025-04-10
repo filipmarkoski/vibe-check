@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { Product } from "~/types/product";
+import type { Product } from "~/types/product";
 
 interface ProductInfoProps {
   product: Product;
+  discountedPrice: number;
 }
 
-export function ProductInfo({ product }: ProductInfoProps) {
-  // Calculate discounted price
-  const discountedPrice = product.price * (1 - product.discountPercentage / 100);
+export function ProductInfo({ product, discountedPrice }: ProductInfoProps) {
+  // No need to calculate discounted price here anymore, it's passed from the server component
 
   return (
     <div className="p-4 flex flex-col">
