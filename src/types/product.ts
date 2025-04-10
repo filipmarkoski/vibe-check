@@ -1,8 +1,8 @@
-export type CategoryObject = {
+export interface CategoryObject {
   slug: string;
   name: string;
   url: string;
-};
+}
 
 export interface Category {
   slug: string;
@@ -10,16 +10,16 @@ export interface Category {
   url: string;
 }
 
-export type Product = {
+export interface Product {
   id: number;
   title: string;
   description: string;
   price: number;
-  discountPercentage?: number;
-  rating?: number;
-  stock?: number;
-  brand?: string;
-  category: string | CategoryObject;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
   thumbnail?: string;
   images: string[];
   tags?: string[];
@@ -33,22 +33,22 @@ export type Product = {
   warrantyInformation?: string;
   shippingInformation?: string;
   availabilityStatus?: string;
-  reviews?: Array<{
+  reviews?: {
     rating: number;
     comment: string;
     date: string;
     reviewerName: string;
     reviewerEmail: string;
-  }>;
+  }[];
   returnPolicy?: string;
   minimumOrderQuantity?: number;
   meta?: {
     createdAt: string;
     updatedAt: string;
-    barcode?: string;
-    qrCode?: string;
+    barcode: string;
+    qrCode: string;
   };
-};
+}
 
 export interface ProductsResponse {
   products: Product[];

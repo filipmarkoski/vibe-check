@@ -1,25 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import type { CategoryObject } from "~/types/product";
 
 interface ProductFiltersProps {
   categories: Array<string | CategoryObject>;
   activeCategory?: string;
-  onCategoryChange: (category: string) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
 export default function ProductFilters({
   categories,
-  activeCategory,
+  activeCategory: externalActiveCategory,
   onCategoryChange,
 }: ProductFiltersProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // Internal state to track selected category when no external state management is provided
+  const [internalActiveCategory, setInternalActiveCategory] = useState<string | undefined>(externalActiveCategory);
+  
+  // Keep internal state in sync with external props
+  useEffect(() => {
+    setInternalActiveCategory(externalActiveCategory);
+  }, [externalActiveCategory]);
+
+  // Use either external or internal active category
+  const activeCategory = externalActiveCategory !== undefined ? externalActiveCategory : internalActiveCategory;
+
+  // Debug info - log whenever the component renders with its current state
+  useEffect(() => {
+    console.log("ProductFilters rendered with:", { 
+      activeCategory, 
+      externalActiveCategory, 
+      internalActiveCategory,
+      hasCallback: typeof onCategoryChange === 'function' 
+    });
+  }, [activeCategory, externalActiveCategory, internalActiveCategory, onCategoryChange]);
 
   const handleCategoryClick = (category: string) => {
-    onCategoryChange(category);
-    setIsOpen(false);
+    console.log("Category clicked:", category);
+    
+    // Update internal state regardless
+    setInternalActiveCategory(category);
+    
+    // Call external handler if provided
+    if (typeof onCategoryChange === 'function') {
+      console.log("Calling onCategoryChange with:", category);
+      onCategoryChange(category);
+    } else {
+      console.log("No onCategoryChange function provided - using internal state only");
+      console.warn("IMPORTANT: For filtering to work, the parent component must pass an onCategoryChange function that updates the product list");
+    }
   };
 
   return (
